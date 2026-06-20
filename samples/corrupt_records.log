@@ -1,0 +1,3 @@
+[INGESTION EXCEPTION] [CHASE_BANK] Row: {'Transaction_ID': 'TXN-BK-006', 'Posting_Date': '2026-06-19', 'Account_No': 'ACC-9982', 'Clear_Amount': '-50.00', 'Asset_Currency': 'USD', 'Description': 'ERROR_NEGATIVE_VAL_MALFORMED'} | Details: Financial volume must be strictly positive: -50.0
+[INGESTION EXCEPTION] [INVOICE_LEDGER] Row: {'inv_reference': 'INV007', 'date_issued': '2026-06-14', 'counterparty': 'ERROR_STRING_MALFORMED', 'bill_val': 'UNPARSEABLE_STRING', 'currency_type': 'EUR'} | Details: could not convert string to float: 'UNPARSEABLE_STRING'
+[INGESTION EXCEPTION] [BINANCE_EXCHANGE] Row: {'TxId': 'TXN-CR-103', 'EventTime': '2026-06-17T09:11:45Z', 'NetValue': '', 'Asset': 'USD', 'OpType': 'MALFORMED_EMPTY_FIELD'} | Details: could not convert string to float: ''
