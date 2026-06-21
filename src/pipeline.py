@@ -1,7 +1,6 @@
 import os
 import sys
 
-# Self-Healing Path Anchor context execution alignment
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(CURRENT_DIR)
 if PROJECT_ROOT not in sys.path:
@@ -10,6 +9,7 @@ if PROJECT_ROOT not in sys.path:
 from src.core.ingestion import OmniLedgerIngestionAdapter
 from src.core.normalization import OmniLedgerCurrencyNormalizer
 from src.database.manager import OmniLedgerDatabaseManager
+from src.database.query_engine import OmniLedgerQueryEngine
 
 def run_ingestion_pipeline():
     bank_csv = os.path.join(PROJECT_ROOT, "samples", "bank_chase_raw.csv")
@@ -47,10 +47,21 @@ def run_ingestion_pipeline():
     print("\n--- OMNILEDGER RELATIONAL PERSISTENCE LAYER WRITE ---")
     db_file = os.path.join(PROJECT_ROOT, "omniledger.db")
     db_manager = OmniLedgerDatabaseManager(db_path=db_file)
-    
-    # Write normalized balances straight to the local sqlite binary tracking ledger
     saved_count = db_manager.write_normalized_records(normalized_ledger_records)
     print(f" [PASS] SQLite Idempotent Batch commit: {saved_count} records saved securely.")
+
+    print("\n--- OMNILEDGER EXECUTIVE EXPOSURE & RISK METRICS ---")
+    query_engine = OmniLedgerQueryEngine(db_path=db_file)
+    currency_exposure = query_engine.extract_currency_exposure()
+    risk_profile = query_engine.extract_risk_profile()
+
+    print(" 📊 Currency Asset Concentration Weight:")
+    for item in currency_exposure:
+        print(f"      - {item['currency']}: {item['count']} Tx | Orig Total: {item['total_original']:,} | Converted: ${item['total_normalized_usd']:,.2f} USD")
+
+    print("\n ⚠️ Operational Risk Stratification Matrix:")
+    for risk in risk_profile:
+        print(f"      - {risk['risk_level']} RISK: {risk['count']} Tx Accounts | Pool Allocation: ${risk['total_normalized_usd']:,.2f} USD")
 
     print(f"-------------------------------------------------------------------------")
     print(f"📊 Relational System Summary:")
