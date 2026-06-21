@@ -50,18 +50,26 @@ def run_ingestion_pipeline():
     saved_count = db_manager.write_normalized_records(normalized_ledger_records)
     print(f" [PASS] SQLite Idempotent Batch commit: {saved_count} records saved securely.")
 
-    print("\n--- OMNILEDGER EXECUTIVE EXPOSURE & RISK METRICS ---")
+    print("\n=========================================================================")
+    print("🧠 OMNILEDGER AUTOMATED FINANCIAL INTELLIGENCE MATRIX")
+    print("=========================================================================")
     query_engine = OmniLedgerQueryEngine(db_path=db_file)
-    currency_exposure = query_engine.extract_currency_exposure()
-    risk_profile = query_engine.extract_risk_profile()
-
+    
+    # Query 1: Currency Concentration Weights
     print(" 📊 Currency Asset Concentration Weight:")
-    for item in currency_exposure:
-        print(f"      - {item['currency']}: {item['count']} Tx | Orig Total: {item['total_original']:,} | Converted: ${item['total_normalized_usd']:,.2f} USD")
+    for item in query_engine.extract_currency_exposure():
+        print(f"      - {item['currency']}: {item['count']} Tx | Orig Total: {item['total_original']:,} | Converted Base: ${item['total_normalized_usd']:,.2f} USD")
 
-    print("\n ⚠️ Operational Risk Stratification Matrix:")
-    for risk in risk_profile:
-        print(f"      - {risk['risk_level']} RISK: {risk['count']} Tx Accounts | Pool Allocation: ${risk['total_normalized_usd']:,.2f} USD")
+    # Query 2: System Exposure Dependencies
+    print("\n 🏢 Institutional Source System Dependency Footprint:")
+    for src in query_engine.extract_system_dependency_risk():
+        print(f"      - {src['source']}: {src['count']} Rows | Managed Liquidity: ${src['total_usd']:,.2f} USD (Avg Transaction Size: ${src['avg_usd']:,.2f} USD)")
+
+    # Query 3: Real-Time Critical Threshold Safety Auditing
+    print("\n 🚨 Automated High-Risk Capital Safety Threshold Audit (>= $1,000.00 base):")
+    violations = query_engine.extract_critical_threshold_violations(limit=1000.0)
+    for v in violations:
+        print(f"      - [CRITICAL EXPOSURE] Ref: {v['tx_id']} | Source: {v['source']} | Net Value: ${v['amount_usd']:,.2f} USD | Classification: {v['risk']} RISK")
 
     print(f"-------------------------------------------------------------------------")
     print(f"📊 Relational System Summary:")
